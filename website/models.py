@@ -10,12 +10,6 @@ class StatusPostu(Enum):
     edytowany = 'Edytowany'
     usuniety = 'Usunięty'
 
-class User(metaclass=ABCMeta):
-    login = ''
-    haslo = ''
-    imie = ''
-    nazwisko = ''
-    dataUrodzenia = datetime.utcnow
 
 class Klient(db.Model, UserMixin):
     # __tablename__ = "klient"
@@ -48,27 +42,6 @@ class Post(db.Model):
     def __repr__(self):
         return f"Post {self.tytul}, {self.dataUtworzenia}"
 
-class Rachunek(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    numer = db.Column(db.Integer, nullable=False)
-    saldo = db.Column(db.Integer, nullable=False)
-    #uzytkownik_id = db.Column(db.Integer, db.ForeignKey("Klient.id"), nullable=False)
-    # waluta_id = db.Column(db.Integer, db.ForeignKey("Waluta.id"), nullable=False)
-
-class Waluta(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    symbol = db.Column(db.String(5), nullable=False)
-    nazwa = db.Column(db.String(20), unique=True, nullable=False)
-
-class Transakcja(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    ilosc = db.Column(db.Float, nullable=False)
-    cena_jednostkowa = db.Column(db.Float, nullable=False)
-    cena_calkowita = db.Column(db.Float, nullable=False)
-    # waluta_id = db.Column(db.Integer, db.ForeignKey("Waluta.id"), nullable=False)
-    # rachunek_id = db.Column(db.Integer, db.ForeignKey("Rachunek.id"), nullable=False)
-    numer_karty = db.Column(db.String(40), nullable=True)
-    # uzytkownik_login
 
 
 
