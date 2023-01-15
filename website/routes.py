@@ -1,4 +1,4 @@
-from flask import render_template, url_for, flash, redirect, request, abort
+from flask import Response, render_template, url_for, flash, redirect, request, abort
 from website import app, db
 from website.models import Paczka, Kurier, Dostarczenia
 from website.forms import *
@@ -37,6 +37,15 @@ def new_kurier():
 
         return redirect(url_for('home'))
     return render_template('create_kurier.html', title='Nowy kurier', form=form, legend='Dodaj Kuriera')
+
+
+@app.route("/paczka/<paczka_id>", methods=['DELETE'])
+def delete_paczka(paczka_id):
+    paczka = Paczka.query.filter_by(id=paczka_id).first()
+    db.session.delete(paczka)
+    db.session.commit()
+    flash('Usunięto paczkę!', 'success')
+    return Response()
 
 
 @app.route("/kurier/assign", methods=['GET', 'POST'])
