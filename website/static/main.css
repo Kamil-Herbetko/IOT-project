@@ -40,7 +40,9 @@ a.article-title:hover {
   color: #428bca;
   text-decoration: none;
 }
-
+.largeFont{
+  font-size: 15px;
+}
 .article-content {
   white-space: pre-line;
 }

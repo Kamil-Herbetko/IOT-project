@@ -1,14 +1,12 @@
 {% extends "layout.html" %}
 {% block content %}
-    {% for post in posts %}
+    {% for paczka in paczki %}
         <article class="media content-section">
           <div class="media-body">
             <div class="article-metadata">
-              <a class="mr-2" href="#">{{ post.author.imie }}</a>
-              <small class="text-muted">{{ post.dataUtworzenia.strftime('%d.%m.%Y')}}</small>
+                <a class="mr-2" href="#">{{ paczka.id }}</a>
+                <a class="mr-2" href="#">{{ paczka.nazwa }}</a>
             </div>
-            <h2><a class="article-title" href={{ url_for('post', post_id=post.id) }}>{{ post.tytul }}</a></h2>
-            <p class="article-content">{{ post.tresc }}</p>
           </div>
         </article>
     {% endfor %}
