@@ -15,6 +15,11 @@
                 .then(response => console.log('Deleted'));
             location.assign('/home');
         }
+        async function usunKuriera(idKuriera) {
+            await fetch('/kurier/' + idKuriera, {method: 'DELETE'})
+                .then(response => console.log('Deleted'));
+            location.assign('/kuriers');
+        }
     </script>
 
 
@@ -35,6 +40,7 @@
           <div class="collapse navbar-collapse" id="navbarToggle">
             <div class="navbar-nav mr-auto">
                 <a class="nav-item nav-link" href="{{ url_for('home') }}">Paczki</a>
+                <a class="nav-item nav-link" href="/kuriers">Kurierzy</a>
                 <a class="nav-item nav-link" href="/paczka/new">Dodaj paczkę</a>
                 <a class="nav-item nav-link" href="/kurier/new">Dodaj kuriera</a>
                 <a class="nav-item nav-link" href="/kurier/assign">Przypisz kuriera</a>
