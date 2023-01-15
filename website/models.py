@@ -1,6 +1,5 @@
 from datetime import datetime
 from website import db
-from abc import ABCMeta, abstractmethod
 from enum import Enum, unique
 
 
@@ -12,8 +11,11 @@ class Status(Enum):
 class Kurier(db.Model):
     __tablename__ = "Kurier"
 
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)    #, autoincrement=False
     nazwa = db.Column(db.String(30), unique=True, nullable=False)
+
+    def __repr__(self):
+        return f"Kurier {self.id}, {self.nazwa}"
 
 
 class Paczka(db.Model):
@@ -21,6 +23,9 @@ class Paczka(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     nazwa = db.Column(db.String(30), unique=True, nullable=False)
+
+    def __repr__(self):
+        return f"Paczka {self.id}, {self.nazwa}"
 
 
 class Dostarczenia(db.Model):
@@ -34,3 +39,5 @@ class Dostarczenia(db.Model):
     dataUtworzenia = db.Column(db.DateTime, nullable=False, default=datetime.now())
     status = db.Column(db.Enum(Status), nullable=False)
 
+    def __repr__(self):
+        return f"Dostarczenie: {self.status}, {self.dataUtworzenia}"

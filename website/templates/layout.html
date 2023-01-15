@@ -12,25 +12,26 @@
 
 
     {% if title %}
-        <title>Kantor - {{ title }}</title>
+        <title>{{ title }}</title>
     {% else %}
-        <title>Kantor</title>
+        <title>Kurierpol</title>
     {% endif %}
 </head>
 <body>
     <header class="site-header">
       <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
         <div class="container">
-          <a class="navbar-brand mr-4" href="/">Socjalny Kantor</a>
+          <a class="navbar-brand mr-4" href="/">Kurierpol</a>
           <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle" aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
           <div class="collapse navbar-collapse" id="navbarToggle">
             <div class="navbar-nav mr-auto">
-              <a class="nav-item nav-link" href="{{ url_for('home') }}">Posty</a>
-              <a class="nav-item nav-link" href="/about">O nas</a>
+                <a class="nav-item nav-link" href="{{ url_for('home') }}">Paczki</a>
+                <a class="nav-item nav-link" href="/paczka/new">Dodaj paczkę</a>
+                <a class="nav-item nav-link" href="/kurier/new">Dodaj kuriera</a>
+                <a class="nav-item nav-link" href="/kurier/assign">Przypisz kuriera</a>
             </div>
-            <!-- Navbar Right Side -->
             <div class="navbar-nav">
             </div>
           </div>

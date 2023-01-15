@@ -1,9 +1,11 @@
 {% extends "layout.html" %}
 {% block content %}
-    {% for post in posts %}
+    {% for paczka in paczki %}
         <article class="media content-section">
           <div class="media-body">
             <div class="article-metadata">
+                <a class="mr-2" href="#">{{ paczka.id }}</a>
+                <a class="mr-2" href="#">{{ paczka.nazwa }}</a>
             </div>
           </div>
         </article>
