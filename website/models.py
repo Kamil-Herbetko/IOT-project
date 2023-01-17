@@ -11,7 +11,7 @@ class Status(Enum):
 class Kurier(db.Model):
     __tablename__ = "Kurier"
 
-    id = db.Column(db.Integer, primary_key=True)    #, autoincrement=False
+    id = db.Column(db.Integer, primary_key=True)
     nazwa = db.Column(db.String(30), unique=True, nullable=False)
 
     def __repr__(self):
