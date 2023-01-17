@@ -66,11 +66,15 @@ def delete_kurier(kurier_id):
 def assign_kurier():
     form = TerminalForm()
 
-    # if request.method == 'POST':
-    #     kurier = Kurier(nazwa=form.nazwa.data)
-    #     db.session.add(kurier)
-    #     db.session.commit()
-    #     flash('Dodano kuriera!', 'success')
+    if request.method == 'POST':
+        # przypisz kuriera do tego raspberry
+        if form.terminal.data == 'RASP1':
+            #terminal1 = form.kurier.data
+           pass
+        elif form.terminal.data == 'RASP2':
+            pass
 
-        # return redirect(url_for('home'))
+        flash('Przypisano kuriera!', 'success')
+
+        return redirect(url_for('home'))
     return render_template('assign_kurier.html', title='Nowy kurier', form=form, legend='Przypisz kuriera do Terminala')

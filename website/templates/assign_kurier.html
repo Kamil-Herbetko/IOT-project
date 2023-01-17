@@ -7,18 +7,12 @@
                 <legend class="border-bottom mb-4">{{ legend }}</legend>
                  <div class="form-group">
                     {{ form.terminal.label(class="form-control-label") }}
-                    {% if form.terminal.errors %}
-                        {{ form.terminal(class="form-control form-control-lg is-invalid") }}
-                        <div class="invalid-feedback">
-                            {% for error in form.terminal.errors %}
-                                <span>{{ error }}</span>
-                            {% endfor %}
-                        </div>
-                    {% else %}
-                        {{ form.kurier(class="form-control form-control-lg") }}
-                    {% endif %}
+                     <br>
+                    {{ form.terminal }}
                     <div class="form-group">
+                        <br>
                         {{ form.kurier.label(class="form-control-label") }}
+                        <p class="form-control-label">Podaj ID</p>
                         {% if form.kurier.errors %}
                             {{ form.kurier(class="form-control form-control-lg is-invalid") }}
                             <div class="invalid-feedback">
