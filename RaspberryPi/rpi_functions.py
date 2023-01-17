@@ -86,12 +86,14 @@ def oled_take_package_screen():
     disp, canvas, draw, fontLarge, fontSmall = init_oled_canvas()
     draw.rectangle([(1, 1), (94, 62)], fill="NAVY")
     draw.text((2, 0), u'Pobieranie\npaczek', font=fontLarge, fill="WHITE")
+    draw.text((2, 44), u'PRZYŁÓŻ KARTĘ', font=fontSmall, fill="RED")
     disp.ShowImage(canvas, 0, 0)
 
 def oled_delivery_package_screen():
     disp, canvas, draw, fontLarge, fontSmall = init_oled_canvas()
     draw.rectangle([(1, 1), (94, 62)], fill="NAVY")
     draw.text((2, 0), u'Wydawanie\npaczek', font=fontLarge, fill="WHITE")
+    draw.text((2, 44), u'PRZYŁÓŻ KARTĘ', font=fontSmall, fill="RED")
     disp.ShowImage(canvas, 0, 0)
 
 def oled_accept_package(info: str):
@@ -127,6 +129,6 @@ def menu(opt: int):
     disp.ShowImage(canvas, 0, 0)
 
 if __name__ == "__main__":
-    menu(1)
+    oled_take_package_screen()
     time.sleep(2)
-    menu(2)
+    oled_delivery_package_screen()
