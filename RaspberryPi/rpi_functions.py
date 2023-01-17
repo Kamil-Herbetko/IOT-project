@@ -108,5 +108,25 @@ def oled_decline_package(info: str):
     draw.text((4, 42), f'{info}', font=fontSmall, fill="RED")
     disp.ShowImage(canvas, 0, 0)
 
+def menu(opt: int):
+    disp, canvas, draw, fontLarge, fontSmall = init_oled_canvas()
+    draw.rectangle([(0, 0), (95, 64)], fill="gray")
+    if opt == 1:
+        draw.rectangle([(0, 0), (48, 64)], fill="seagreen")
+    if opt == 2:
+        draw.rectangle([(48, 0), (96, 64)], fill="orangered")
+    
+    draw.rectangle([(4, 4), (42, 60)], fill="palegreen")
+    draw.rectangle([(52, 4), (92, 60)], fill="tomato")
+    
+    take_img = Image.open('./take.png').resize((40, 40)).convert("RGBA")
+    delivery_img = Image.open('./delivery.png').resize((40, 40)).convert("RGBA")
+    canvas.paste(take_img, (4, 10))
+    canvas.paste(delivery_img, (52, 10))
+    
+    disp.ShowImage(canvas, 0, 0)
+
 if __name__ == "__main__":
-    pass
+    menu(1)
+    time.sleep(2)
+    menu(2)
