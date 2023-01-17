@@ -22,7 +22,7 @@ class Paczka(db.Model):
     __tablename__ = "Paczka"
 
     id = db.Column(db.Integer, primary_key=True)
-    nazwa = db.Column(db.String(30), unique=True, nullable=False)
+    nazwa = db.Column(db.String(30), unique=True, nullable=False, default=None)
 
     def __repr__(self):
         return f"Paczka {self.id}, {self.nazwa}"
