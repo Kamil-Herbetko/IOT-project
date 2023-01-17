@@ -11,9 +11,9 @@ def id(uid: list[int]):
     id = 0
     for i in range(0, len(uid)):
         id += uid[i] << (i*8)
-    return id
+    return str(id)
 
-def read_rfid():
+def read_rfid_loop(func):
     last_id = None
     while True:
         MIFAREReader = MFRC522()
@@ -22,7 +22,7 @@ def read_rfid():
             (status, uid) = MIFAREReader.MFRC522_Anticoll()
             if status == MIFAREReader.MI_OK and last_id != id(uid):
                 last_id = id(uid)
-                return id(uid)
+                func(id(uid))
         else:
             last_id = None
 
@@ -55,20 +55,11 @@ def flash_led_stripe(color: tuple[int, int, int], flash_period: float):
     pixels.fill((0, 0, 0))
     pixels.show()
 
-def buttons_setup():
-    GPIO.add_event_detect(buttonGreen, GPIO.RISING, callback=handle_buttons, bouncetime=200)
+def handle_green_button(handle_button):
+    GPIO.add_event_detect(buttonGreen, GPIO.RISING, callback=handle_button, bouncetime=200)
 
-def handle_buttons():
-    if GPIO.input(buttonRed) == 1:
-        handle_red_button()
-    if GPIO.input(buttonGreen) == 1:
-        handle_green_button()
-
-def handle_green_button(onPress):
-    onPress()
-
-def handle_red_button(onPress):
-    onPress()
+def handle_red_button(handle_button):
+    GPIO.add_event_detect(buttonGreen, GPIO.RISING, callback=handle_button, bouncetime=200)
 
 def oled_setup():
     disp = SSD1331.SSD1331()
@@ -77,48 +68,45 @@ def oled_setup():
     return disp
 
 def init_oled_canvas():
-    disp = oled_setup()    
+    disp = oled_setup()
     canvas = Image.new("RGB", (disp.width, disp.height), "WHITE")
     draw = ImageDraw.Draw(canvas)
-    fontLarge = ImageFont.truetype('./lib/oled/Font.ttf', 30)
+    fontLarge = ImageFont.truetype('./lib/oled/Font.ttf', 16)
     fontSmall = ImageFont.truetype('./lib/oled/Font.ttf', 12)
     return disp, canvas, draw, fontLarge, fontSmall
 
 def oled_welcome():
-    disp, canvas, draw, fontLarge, fontSmall = oled_setup()
-    draw.rectangle([(0, 0), (96, 64)], fill="YELLOW")
-    draw.text((8, 0), u'Witaj', font=fontLarge, fill="WHITE")
-    draw.text((12, 40), 'w systemie obsługi kurierskiej', font=fontSmall, fill="WHITe")
+    disp, canvas, draw, fontLarge, fontSmall = init_oled_canvas()
+    draw.rectangle([(1, 1), (94, 62)], fill="YELLOW")
+    draw.text((4, 0), u'Witaj', font=fontLarge, fill="WHITE")
+    draw.text((6, 26), 'w systemie \nkurierskim', font=fontSmall, fill="WHITe")
     disp.ShowImage(canvas, 0, 0)
 
 def oled_take_package_screen():
-    disp, canvas, draw, fontLarge, fontSmall = oled_setup()
-    draw.rectangle([(0, 0), (96, 64)], fill="NAVY")
-    draw.text((8, 0), u'Pobieranie paczek', font=fontLarge, fill="WHITE")
+    disp, canvas, draw, fontLarge, fontSmall = init_oled_canvas()
+    draw.rectangle([(1, 1), (94, 62)], fill="NAVY")
+    draw.text((2, 0), u'Pobieranie\npaczek', font=fontLarge, fill="WHITE")
     disp.ShowImage(canvas, 0, 0)
 
 def oled_delivery_package_screen():
-    disp, canvas, draw, fontLarge, fontSmall = oled_setup()
-    draw.rectangle([(0, 0), (96, 64)], fill="NAVY")
-    draw.text((8, 0), u'Wydawanie paczek', font=fontLarge, fill="WHITE")
+    disp, canvas, draw, fontLarge, fontSmall = init_oled_canvas()
+    draw.rectangle([(1, 1), (94, 62)], fill="NAVY")
+    draw.text((2, 0), u'Wydawanie\npaczek', font=fontLarge, fill="WHITE")
     disp.ShowImage(canvas, 0, 0)
 
 def oled_accept_package(info: str):
-    disp, canvas, draw, fontLarge, fontSmall = oled_setup()
-    draw.rectangle([(0, 0), (96, 64)], fill="LIME")
-    draw.text((0, 0), u'Paczka zaakceptowana', font=fontLarge, fill="WHITE")
-    draw.text((30, 0), f'{info}', font=fontSmall, fill="WHITE")
-    draw.text((45, 0), u'✔️', font=fontLarge, fill="GREEN")
+    disp, canvas, draw, fontLarge, fontSmall = init_oled_canvas()
+    draw.rectangle([(1, 1), (94, 62)], fill="LIME")
+    draw.text((4, 0), u'Paczka\nokej', font=fontLarge, fill="WHITE")
+    draw.text((4, 42), f'{info}', font=fontSmall, fill="GREEN")
     disp.ShowImage(canvas, 0, 0)
 
 def oled_decline_package(info: str):
-    disp, canvas, draw, fontLarge, fontSmall = oled_setup()
-    draw.rectangle([(0, 0), (96, 64)], fill="MAROON")
-    draw.text((0, 0), u'Paczka odrzucona', font=fontLarge, fill="WHITE")
-    draw.text((30, 0), f'{info}', font=fontSmall, fill="WHITE")
-    draw.text((45, 0), u'❌', font=fontLarge, fill="RED")
+    disp, canvas, draw, fontLarge, fontSmall = init_oled_canvas()
+    draw.rectangle([(1, 1), (94, 62)], fill="MAROON")
+    draw.text((4, 0), u'Paczka\nodrzucona', font=fontLarge, fill="WHITE")
+    draw.text((4, 42), f'{info}', font=fontSmall, fill="RED")
     disp.ShowImage(canvas, 0, 0)
 
 if __name__ == "__main__":
-    flash_led_stripe((255, 0, 255), 1)
     pass
