@@ -9,6 +9,18 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main.css') }}">
+    <script>
+        async function usunPaczke(idPaczki) {
+            await fetch('/paczka/' + idPaczki, {method: 'DELETE'})
+                .then(response => console.log('Deleted'));
+            location.assign('/home');
+        }
+        async function usunKuriera(idKuriera) {
+            await fetch('/kurier/' + idKuriera, {method: 'DELETE'})
+                .then(response => console.log('Deleted'));
+            location.assign('/kuriers');
+        }
+    </script>
 
 
     {% if title %}
@@ -28,6 +40,7 @@
           <div class="collapse navbar-collapse" id="navbarToggle">
             <div class="navbar-nav mr-auto">
                 <a class="nav-item nav-link" href="{{ url_for('home') }}">Paczki</a>
+                <a class="nav-item nav-link" href="/kuriers">Kurierzy</a>
                 <a class="nav-item nav-link" href="/paczka/new">Dodaj paczkę</a>
                 <a class="nav-item nav-link" href="/kurier/new">Dodaj kuriera</a>
                 <a class="nav-item nav-link" href="/kurier/assign">Przypisz kuriera</a>

@@ -1,4 +1,4 @@
-from flask import render_template, url_for, flash, redirect, request, abort
+from flask import Response, render_template, url_for, flash, redirect, request, abort
 from website import app, db
 from website.models import Paczka, Kurier, Dostarczenia
 from website.forms import *
@@ -6,9 +6,14 @@ from website.forms import *
 @app.route("/")
 @app.route("/home")
 def home():
-    print(Kurier.query.all())
     paczki = Paczka.query.all()
     return render_template('home.html', paczki=paczki)
+
+
+@app.route("/kuriers")
+def kuriers():
+    kurier_objs = Kurier.query.all()
+    return render_template('kuriers.html', kuriers=kurier_objs)
 
 
 @app.route("/paczka/new", methods=['GET', 'POST'])
@@ -35,8 +40,26 @@ def new_kurier():
         db.session.commit()
         flash('Dodano kuriera!', 'success')
 
-        return redirect(url_for('home'))
+        return redirect(url_for('kuriers'))
     return render_template('create_kurier.html', title='Nowy kurier', form=form, legend='Dodaj Kuriera')
+
+
+@app.route("/paczka/<paczka_id>", methods=['DELETE'])
+def delete_paczka(paczka_id):
+    paczka = Paczka.query.filter_by(id=paczka_id).first()
+    db.session.delete(paczka)
+    db.session.commit()
+    flash('Usunięto paczkę!', 'success')
+    return Response()
+
+
+@app.route("/kurier/<kurier_id>", methods=['DELETE'])
+def delete_kurier(kurier_id):
+    kurier = Kurier.query.filter_by(id=kurier_id).first()
+    db.session.delete(kurier)
+    db.session.commit()
+    flash('Usunięto kuriera!', 'success')
+    return Response()
 
 
 @app.route("/kurier/assign", methods=['GET', 'POST'])

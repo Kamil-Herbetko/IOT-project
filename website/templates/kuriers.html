@@ -1,12 +1,12 @@
 {% extends "layout.html" %}
 {% block content %}
-    {% for paczka in paczki %}
+    {% for kurier in kuriers %}
         <article class="media content-section">
           <div class="media-body">
             <div class="article-metadata">
-                <a class="mr-2" href="#">{{ paczka.id }}</a>
-                <a class="mr-2" href="#">{{ paczka.nazwa }}</a>
-                <button class="btn btn-danger" onClick="usunPaczke({{ paczka.id }})">Usuń paczkę</button>
+                <a class="mr-2" href="#">{{ kurier.id }}</a>
+                <a class="mr-2" href="#">{{ kurier.nazwa }}</a>
+                <button class="btn btn-danger" onClick="usunKuriera({{ kurier.id }})">Usuń kuriera</button>
             </div>
           </div>
         </article>
