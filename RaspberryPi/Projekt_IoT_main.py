@@ -30,31 +30,32 @@ class Green_button_callback:
 
         if self.terminal.current_menu_option == 0:
             self.terminal.state = Terminal_state.GETTING_PACKAGE
-            #wyswietl wiadomosc na ekranie aby przylozyc karte
+            rpi_functions.oled_take_package_screen()
         elif self.terminal.current_menu_option == 1:
             self.terminal.state = Terminal_state.GIVING_PACKAGE
-            #wysiwetl wiadomosc na ekranie aby przylozyc karte
+            rpi_functions.oled_delivery_package_screen()
 
 class Message_package_callback:
     def __init__(self, terminal):
         self.terminal = terminal
 
     def __call__(self, client, userdata, message):
-        #if courier_id != self.terminal.courier_id
-        #    return
+        package_info = message.payload.split(",")
 
-        #if message_ok:
-        #   wyswietl ok
-        #   rpi_functions.short_buzz()
-        #   rpi_functions.flash_led_stripe((0, 255, 0), 0.3)
-        #elif message_not_ok:
-        #   wyswietl nie ok
-        #   rpi_functions.short_buzz()
-        #   rpi_functions.flash_led_stripe((255, 0, 0) 0.3)
+        if int(package_info[0]) != self.terminal.courier_id:
+            return
+
+        if package_info[2] == 0:#message_ok
+            rpi_functions.oled_accept_package("")
+            rpi_functions.short_buzz()
+            rpi_functions.flash_led_stripe((0, 255, 0), 0.3)
+        elif package_info[2] == 1:#message_not_ok
+            rpi_functions.oled_decline_package("")
+            rpi_functions.short_buzz()
+            rpi_functions.flash_led_stripe((255, 0, 0), 0.3)
         sleep(2)
         self.terminal.state = Terminal_state.IDLE
-        #redraw menu
-        pass
+        self.terminal.draw_menu()
 
 #mozna zignorowac
 class Message_courier_callback:
@@ -64,7 +65,7 @@ class Message_courier_callback:
     def __call__(self, client, userdata, message):
         #sprawdz czy to message do mnie na podstawie maca
         #wyswietl komunikat o zmianie id kuriera
-        self.terminal.mqtt_handler.send(#topic, #wiadomosc_zwrotna)
+        #self.terminal.mqtt_handler.send(#topic, #wiadomosc_zwrotna)
         sleep(1)
         #redraw menu
         pass
@@ -76,30 +77,24 @@ class Terminal:
         #z courier_id pewnie też data race albo nie jesli nie bedzie zmieniany
         self.courier_id = 1
         self.current_menu_option = 0
-        self.menu_options = [ "Odbierz paczkę", "Wydaj paczkę" ]
+        #self.menu_options = [ "Odbierz paczkę", "Wydaj paczkę" ]
         self.mqtt_handler = MQTT_handler()
         GPIO.add_event_detect(buttonRed, GPIO.FALLING, callback=Red_button_callback(self), bouncetime=200) 
         GPIO.add_event_detect(buttonGreen, GPIO.FALLING, callback=Green_button_callback(self), bouncetime=200) 
-        self.mqtt_handler.add_messege_receive_callback("terminal/operation/#", Message_package_callback(self))
-        self.mqtt_handler.add_messege_receive_callback("terminal/courier/change", Message_courier_callback(self))
+        self.mqtt_handler.add_messege_receive_callback("to_terminal", Message_package_callback(self))
+        #self.mqtt_handler.add_messege_receive_callback("terminal/courier/change", Message_courier_callback(self))
 
 
     def draw_menu(self):
-        #rysuj menu ze wskaźnikiem na self.current_menu_option i opcjami self.menu_options
-        pass
+        rpi_functions.menu(self.current_menu_option)
 
     def read_rfid(self):
         id = rpi_functions.read_rfid()
         #dodac jakis timeout do rfida
-        topic = ""
-        if self.state == Terminal_state.GIVING_PACKAGE:
-            topic = "give" # placeholder
-        elif self.state == Terminal_state.GETTING_PACKAGE:
-            topic = "get" # placeholder
+        topic = "to_central"
         
         self.mqtt_handler.send(topic, str(self.courier_id) + ";" + str(id))
         self.state = Terminal_state.WAITING
-        pass
 
     def main_loop(self):
         while True:
