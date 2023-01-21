@@ -59,7 +59,7 @@ def handle_green_button(handle_button):
     GPIO.add_event_detect(buttonGreen, GPIO.RISING, callback=handle_button, bouncetime=200)
 
 def handle_red_button(handle_button):
-    GPIO.add_event_detect(buttonGreen, GPIO.RISING, callback=handle_button, bouncetime=200)
+    GPIO.add_event_detect(buttonRed, GPIO.RISING, callback=handle_button, bouncetime=200)
 
 def oled_setup():
     disp = SSD1331.SSD1331()
@@ -79,7 +79,7 @@ def oled_welcome():
     disp, canvas, draw, fontLarge, fontSmall = init_oled_canvas()
     draw.rectangle([(1, 1), (94, 62)], fill="YELLOW")
     draw.text((4, 0), u'Witaj', font=fontLarge, fill="WHITE")
-    draw.text((6, 26), 'w systemie \nkurierskim', font=fontSmall, fill="WHITe")
+    draw.text((6, 26), 'w systemie \nkurierskim', font=fontSmall, fill="WHITE")
     disp.ShowImage(canvas, 0, 0)
 
 def oled_take_package_screen():
@@ -96,14 +96,14 @@ def oled_delivery_package_screen():
     draw.text((2, 44), u'PRZYŁÓŻ KARTĘ', font=fontSmall, fill="RED")
     disp.ShowImage(canvas, 0, 0)
 
-def oled_accept_package(info: str):
+def oled_accept_package(info: str=""):
     disp, canvas, draw, fontLarge, fontSmall = init_oled_canvas()
     draw.rectangle([(1, 1), (94, 62)], fill="LIME")
     draw.text((4, 0), u'Paczka\nokej', font=fontLarge, fill="WHITE")
     draw.text((4, 42), f'{info}', font=fontSmall, fill="GREEN")
     disp.ShowImage(canvas, 0, 0)
 
-def oled_decline_package(info: str):
+def oled_decline_package(info: str=""):
     disp, canvas, draw, fontLarge, fontSmall = init_oled_canvas()
     draw.rectangle([(1, 1), (94, 62)], fill="MAROON")
     draw.text((4, 0), u'Paczka\nodrzucona', font=fontLarge, fill="WHITE")
@@ -127,8 +127,3 @@ def menu(opt: int):
     canvas.paste(delivery_img, (52, 10))
     
     disp.ShowImage(canvas, 0, 0)
-
-if __name__ == "__main__":
-    oled_take_package_screen()
-    time.sleep(2)
-    oled_delivery_package_screen()

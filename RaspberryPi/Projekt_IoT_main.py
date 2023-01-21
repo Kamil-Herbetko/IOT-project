@@ -4,7 +4,7 @@ from time import sleep
 from mqtt_handler import MQTT_handler
 from config import *
 import RPi.GPIO as GPIO
-import rpi_functions
+from rpi_functions import *
 
 class Terminal_state(Enum):
     GETTING_PACKAGE = 1
@@ -85,34 +85,27 @@ class Terminal:
 
 
     def draw_menu(self):
-        #rysuj menu ze wskaźnikiem na self.current_menu_option i opcjami self.menu_options
-        pass
+        menu(self.current_menu_option)
 
-    def read_rfid(self):
-        id = rpi_functions.read_rfid()
-        #dodac jakis timeout do rfida
-        topic = ""
+
+    def rfid_callback(id):
+        payload = f"{self.courier_id};{id}"
         if self.state == Terminal_state.GIVING_PACKAGE:
-            topic = "give" # placeholder
+            self.mqtt_handler.send("give", payload)
         elif self.state == Terminal_state.GETTING_PACKAGE:
-            topic = "get" # placeholder
-        
-        self.mqtt_handler.send(topic, str(self.courier_id) + ";" + str(id))
+            self.mqtt_handler.send("get", payload)
         self.state = Terminal_state.WAITING
-        pass
+    
 
     def main_loop(self):
-        while True:
-            if self.state == Terminal_state.GIVING_PACKAGE or self.state == Terminal_state.GETTING_PACKAGE:
-                self.read_rfid()
-                #jesli zbyt dlugo nie ma przylozonej karty to wroc do idle state
-            else:
-                sleep(0.1)
+        read_rfid_loop(rfid_callback)
 
 
 def main():
     terminal = Terminal()
     terminal.mqtt_handler.start_connection()
+    oled_welcome()
+    time.sleep(2)
     terminal.draw_menu()
     terminal.main_loop()
         
