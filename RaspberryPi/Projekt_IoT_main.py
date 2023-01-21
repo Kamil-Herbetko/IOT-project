@@ -4,6 +4,7 @@ from time import sleep
 from mqtt_handler import MQTT_handler
 from config import *
 import RPi.GPIO as GPIO
+import rpi_functions
 
 class Terminal_state(Enum):
     GETTING_PACKAGE = 1
@@ -39,14 +40,23 @@ class Message_package_callback:
         self.terminal = terminal
 
     def __call__(self, client, userdata, message):
-        #sprawdz czy to message do mnie na podstawie maca/courier_id
-        #wyswietl wiadomosc na ekranie 
-        #daj głos i zapal odpowiedni kolor lampki
-        #poczekaj chwilę
-        #przejdz do stanu IDLE
+        #if courier_id != self.terminal.courier_id
+        #    return
+
+        #if message_ok:
+        #   wyswietl ok
+        #   rpi_functions.short_buzz()
+        #   rpi_functions.flash_led_stripe((0, 255, 0), 0.3)
+        #elif message_not_ok:
+        #   wyswietl nie ok
+        #   rpi_functions.short_buzz()
+        #   rpi_functions.flash_led_stripe((255, 0, 0) 0.3)
+        sleep(2)
+        self.terminal.state = Terminal_state.IDLE
         #redraw menu
         pass
 
+#mozna zignorowac
 class Message_courier_callback:
     def __init__(self, terminal):
         self.terminal = terminal
@@ -54,8 +64,8 @@ class Message_courier_callback:
     def __call__(self, client, userdata, message):
         #sprawdz czy to message do mnie na podstawie maca
         #wyswietl komunikat o zmianie id kuriera
-        #odeslij odpowiedz?
-        #poczekaj chwilę
+        self.terminal.mqtt_handler.send(#topic, #wiadomosc_zwrotna)
+        sleep(1)
         #redraw menu
         pass
 
@@ -63,7 +73,7 @@ class Terminal:
     def __init__(self):
         #ze statem będzie prawdopodobnie data race
         self.state = Terminal_state.IDLE
-        #z courier_id pewnie też data race
+        #z courier_id pewnie też data race albo nie jesli nie bedzie zmieniany
         self.courier_id = 1
         self.current_menu_option = 0
         self.menu_options = [ "Odbierz paczkę", "Wydaj paczkę" ]
@@ -79,9 +89,16 @@ class Terminal:
         pass
 
     def read_rfid(self):
-        #odczytaj rfid i wyslij wiadomosc do centralki w zaleznosci od stanu
-        #self.mqtt_handler.send(#topic, #wiadomosc)
-        #zmien stan na waiting 
+        id = rpi_functions.read_rfid()
+        #dodac jakis timeout do rfida
+        topic = ""
+        if self.state == Terminal_state.GIVING_PACKAGE:
+            topic = "give" # placeholder
+        elif self.state == Terminal_state.GETTING_PACKAGE:
+            topic = "get" # placeholder
+        
+        self.mqtt_handler.send(topic, str(self.courier_id) + ";" + str(id))
+        self.state = Terminal_state.WAITING
         pass
 
     def main_loop(self):
@@ -98,7 +115,6 @@ def main():
     terminal.mqtt_handler.start_connection()
     terminal.draw_menu()
     terminal.main_loop()
-    
         
 
 if __name__ == "__main__":
