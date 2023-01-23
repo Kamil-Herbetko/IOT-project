@@ -34,7 +34,7 @@ def read_dostarczenie_info(client, userdata, message):
         db.session.commit()
 
         if message == 1:
-            dostarczenie = Dostarczenie(kurier_id=kurier.id, paczka_id=paczka.id, status="Nadana")
+            dostarczenie = Dostarczenia(kurier_id=kurier.id, paczka_id=paczka.id, status="Nadana")
             
         else:
             client.publish()

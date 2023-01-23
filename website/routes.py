@@ -10,6 +10,13 @@ def home():
     paczki = Paczka.query.all()
     return render_template("home.html", paczki=paczki)
 
+@app.route("/dostarczenia")
+def dostarczenia():
+    dostarczenia = Dostarczenia.query.all()
+    paczki = Paczka.query
+    kurierzy = Kurier.query
+    return render_template("dostarczenia.html", dostarczenia=dostarczenia, paczki=paczki, kurierzy=kurierzy)
+
 
 @app.route("/kuriers")
 def kuriers():
