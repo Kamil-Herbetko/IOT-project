@@ -1,0 +1,36 @@
+{% extends "layout.html" %}
+{% block content %}
+   <div class="content_section">
+        <form method="POST" action="">
+            {{ form.hidden_tag() }}
+            <fieldset class="form-group">
+                <legend class="border-bottom mb-4">{{ legend }}</legend>
+                 <div class="form-group">
+                    {{ form.terminal.label(class="form-control-label") }}
+                     <br>
+                    {{ form.terminal }}
+                    <div class="form-group">
+                        <br>
+                        {{ form.kurier.label(class="form-control-label") }}
+                        <p class="form-control-label">Podaj ID</p>
+                        {% if form.kurier.errors %}
+                            {{ form.kurier(class="form-control form-control-lg is-invalid") }}
+                            <div class="invalid-feedback">
+                                {% for error in form.kurier.errors %}
+                                    <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            {{ form.kurier(class="form-control form-control-lg") }}
+                        {% endif %}
+                    </div>
+                </div>
+
+
+            </fieldset>
+            <div class="form-group">
+                {{ form.submit(class="btn btn-outline-info") }}
+            </div>
+        </form>
+    </div>
+{% endblock content %}

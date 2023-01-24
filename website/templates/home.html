@@ -1,0 +1,14 @@
+{% extends "layout.html" %}
+{% block content %}
+    {% for paczka in paczki %}
+        <article class="media content-section">
+          <div class="media-body">
+            <div class="article-metadata">
+                <a class="mr-2" href="#">{{ paczka.id }}</a>
+                <a class="mr-2" href="#">{{ paczka.nazwa }}</a>
+                <button class="btn btn-danger right" onClick="usunPaczke({{ paczka.id }})">Usuń paczkę</button>
+            </div>
+          </div>
+        </article>
+    {% endfor %}
+{% endblock content %}

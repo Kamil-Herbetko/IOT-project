@@ -1,0 +1,17 @@
+{% extends "layout.html" %}
+{% block content %}
+    {% for dostarczenie in dostarczenia %}
+        <article class="media content-section">
+          <div class="media-body">
+            <div class="article-metadata">
+                <a class="mr-2" href="#">{{ dostarczenie.id }}</a>
+                <a class="mr-2" href="#">{{ paczki.filter_by(id=dostarczenie.paczka_id).first().nazwa }}</a>
+                <a class="mr-2" href="#">{{ kurierzy.filter_by(id=dostarczenie.kurier_id).first().nazwa }}</a>
+                <a class="mr-2" href="#">{{ dostarczenie.dataUtworzenia }}</a>
+                <a class="mr-2" href="#">{{ dostarczenie.status.value }}</a>
+{#                <button class="btn btn-danger right" onClick="usunPaczke({{ paczka.id }})">Usuń paczkę</button>#}
+            </div>
+          </div>
+        </article>
+    {% endfor %}
+{% endblock content %}
