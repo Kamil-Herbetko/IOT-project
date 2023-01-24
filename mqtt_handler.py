@@ -1,24 +1,25 @@
 import paho.mqtt.client as mqtt
 from website import db
 from website.models import Dostarczenia, Kurier, Paczka
+import time
 
+def on_connect(client, userdata, flags, rc):
+    client.subscribe("to_central")
 
 class MQTT_handler:
     def __init__(self) -> None:
         self.broker = "Kamil_Mobile.local"
         self.client = mqtt.Client()
+        self.client.on_connect = on_connect
         print("Client_started")
 
     def start_connection(self):
         self.client.connect_async(self.broker, port=1883, keepalive=60, bind_address="")
         self.client.loop_start()
-        self.client.tls_set("./ca.crt")
+        #self.client.tls_set("./ca.crt")
 
     def send(self, topic, message):
         self.client.publish(topic, message, qos=1)
-
-    def subscribe(self, topic):
-        self.client.subscribe(topic)
 
     def add_messege_receive_callback(self, topic_filter, callback):
         self.client.message_callback_add(topic_filter, callback)
@@ -26,6 +27,7 @@ class MQTT_handler:
 
 
 def read_dostarczenie_info(client, userdata, message):
+    print(message.payload)
     id_kuriera, id_paczki, status = map(int, message.payload.split(","))
     kurier = Kurier.query.filter_by(id=id_kuriera).first()
     paczka = Paczka.query.filter_by(id=id_paczki).first()
@@ -77,8 +79,11 @@ def read_dostarczenie_info(client, userdata, message):
                 )
 
 
+
 def add_mqtt_client():
     mqtt_handler = MQTT_handler()
+    mqtt_handler.start_connection()
     mqtt_handler.add_messege_receive_callback(
         "to_central", read_dostarczenie_info
     )
+    return mqtt_handler
