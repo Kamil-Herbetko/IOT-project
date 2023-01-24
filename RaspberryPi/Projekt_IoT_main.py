@@ -92,8 +92,8 @@ class Terminal:
         self.current_menu_option = 0
         #self.menu_options = [ "Odbierz paczkę", "Wydaj paczkę" ]
         self.mqtt_handler = MQTT_handler()
-        GPIO.add_event_detect(buttonRed, GPIO.FALLING, callback=Red_button_callback(self), bouncetime=200) 
-        GPIO.add_event_detect(buttonGreen, GPIO.FALLING, callback=Green_button_callback(self), bouncetime=200) 
+        GPIO.add_event_detect(buttonRed, GPIO.FALLING, callback=Red_button_callback(self), bouncetime=3000) 
+        GPIO.add_event_detect(buttonGreen, GPIO.FALLING, callback=Green_button_callback(self), bouncetime=3000) 
         self.mqtt_handler.add_messege_receive_callback("to_terminal", Message_package_callback(self))
         #self.mqtt_handler.add_messege_receive_callback("terminal/courier/change", Message_courier_callback(self))
 
