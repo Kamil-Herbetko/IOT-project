@@ -7,6 +7,7 @@ class MQTT_handler:
     def __init__(self) -> None:
         self.broker = "Kamil_Mobile.local"
         self.client = mqtt.Client()
+        print("Client_started")
 
     def start_connection(self):
         self.client.connect_async(self.broker, port=1883, keepalive=60, bind_address="")
@@ -21,6 +22,7 @@ class MQTT_handler:
 
     def add_messege_receive_callback(self, topic_filter, callback):
         self.client.message_callback_add(topic_filter, callback)
+        print("Callback added successfully")
 
 
 def read_dostarczenie_info(client, userdata, message):
@@ -40,11 +42,11 @@ def read_dostarczenie_info(client, userdata, message):
             db.session.add(dostarczenie)
             db.session.commit()
             client.publish(
-                "rasp_topick", f"{id_kuriera},ok,package sent successfully"
+                "to_terminal", f"{id_kuriera},ok,package sent successfully"
             )
         else:
             client.publish(
-                "rasp_topick", f"{id_kuriera},error,package has to be sent first"
+                "to_terminal", f"{id_kuriera},error,package has to be sent first"
             )
     else:
         dostarczenie = Dostarczenia.query.filter_by(kurier_id=kurier.id, paczka_id=paczka.id).first()
@@ -56,27 +58,27 @@ def read_dostarczenie_info(client, userdata, message):
                 db.session.add(dostarczenie)
                 db.session.commit()
                 client.publish(
-                    "rasp_topick", f"{id_kuriera},ok,package sent successfully"
+                    "to_terminal", f"{id_kuriera},ok,package sent successfully"
                 )
             else:
                 client.publish(
-                    "rasp_topick", f"{id_kuriera},error,package has to be sent first"
+                    "to_terminal", f"{id_kuriera},error,package has to be sent first"
                 )
         else:
             if status == 2:
                 dostarczenie.status = "Dostarczona"
                 db.session.commit()
                 client.publish(
-                    "rasp_topick", f"{id_kuriera},ok,package received successfully"
+                    "to_terminal", f"{id_kuriera},ok,package received successfully"
                 )
             else:
                 client.publish(
-                    "rasp_topick", f"{id_kuriera},error,package cannot be sent twice"
+                    "to_terminal", f"{id_kuriera},error,package cannot be sent twice"
                 )
 
 
 def add_mqtt_client():
     mqtt_handler = MQTT_handler()
     mqtt_handler.add_messege_receive_callback(
-        "paczka/status/change", read_dostarczenie_info
+        "to_central", read_dostarczenie_info
     )
