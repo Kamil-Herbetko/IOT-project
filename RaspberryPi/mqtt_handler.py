@@ -15,7 +15,7 @@ class MQTT_handler:
         self.client.loop_start()
         
     def send(self, topic, message):
-        self.client.publish(topic, message, qos=1)
+        self.client.publish(topic, message, qos=2)
 
     def add_messege_receive_callback(self, topic_filter, callback):
         self.client.message_callback_add(topic_filter, callback)
