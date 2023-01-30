@@ -22,7 +22,7 @@ class Red_button_callback:
         if self.terminal.state != Terminal_state.IDLE:
             return 
 
-        self.terminal.current_menu_option = (self.terminal.current_menu_option + 1) % 2
+        self.terminal.current_menu_option = (self.terminal.current_menu_option + 1) % 2 + 1
         self.terminal.draw_menu()
 
 class Green_button_callback:
@@ -102,7 +102,7 @@ class Terminal:
 
     def rfid_callback(self, id):
         if self.state in [Terminal_state.GETTING_PACKAGE, Terminal_state.GIVING_PACKAGE]:
-            payload = f"{self.courier_id},{id},{self.state}"
+            payload = f"{self.courier_id},{id},{int(self.state)}"
             self.mqtt_handler.send("to_central", payload)
             self.state = Terminal_state.WAITING
     
