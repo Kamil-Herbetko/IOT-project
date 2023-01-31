@@ -16,7 +16,7 @@ class MQTT_handler:
     def start_connection(self):
         self.client.connect_async(self.broker, port=1883, keepalive=60, bind_address="")
         self.client.loop_start()
-        #self.client.tls_set("./ca.crt")
+        # self.client.tls_set("./ca.crt")
 
     def send(self, topic, message):
         self.client.publish(topic, message, qos=1)
